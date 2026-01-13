@@ -4,11 +4,11 @@
 -- ======================================================
 
 -- Create Database
-CREATE DATABASE IF NOT EXISTS db_shop 
+CREATE DATABASE IF NOT EXISTS db_68319010013 
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
 
-USE db_shop;
+USE db_68319010013;
 
 -- ======================================================
 -- Table: tbl_users
@@ -36,3 +36,12 @@ CREATE TABLE IF NOT EXISTS tbl_users (
 -- ======================================================
 -- INSERT INTO tbl_users (firstname, fullname, lastname, username, password, address, sex, birthday, status)
 -- VALUES ('นาย', 'ทดสอบ', 'ระบบ', 'admin', '$2b$10$...hashed...', 'กรุงเทพฯ', 'ชาย', '1990-01-01', 'active');
+
+-- ======================================================
+-- If table already exists, run this to add missing columns:
+-- ======================================================
+-- ALTER TABLE tbl_users 
+--   ADD COLUMN address TEXT COMMENT 'Address' AFTER password,
+--   ADD COLUMN sex VARCHAR(10) COMMENT 'Gender' AFTER address,
+--   ADD COLUMN birthday DATE COMMENT 'Date of birth' AFTER sex;
+
