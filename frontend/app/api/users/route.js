@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
 export async function GET() {
   try {
-    const res = await fetch(
-      "https://backend-nextjs-virid.vercel.app/api/users",
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${API_URL}/api/users`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
@@ -33,14 +32,11 @@ export async function POST(request) {
 
     // Handle login action by checking existing users
     if (body.action === "login") {
-      const res = await fetch(
-        "https://backend-nextjs-virid.vercel.app/api/users",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`${API_URL}/api/users`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -57,16 +53,13 @@ export async function POST(request) {
     }
 
     // Default behavior for user creation
-    const res = await fetch(
-      "https://backend-nextjs-virid.vercel.app/api/users",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const res = await fetch(`${API_URL}/api/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);

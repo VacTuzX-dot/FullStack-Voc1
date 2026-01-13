@@ -524,6 +524,52 @@ app.get("/", (req, res) => {
 // Users routes
 app.use("/api/users", usersRouter);
 
+// Alias for /api/auth/login to match frontend expectations
+app.post("/api/auth/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const missing = requireFields({ username, password }, [
+    "username",
+    "password",
+  ]);
+  if (missing) {
+    return res.status(400).json({
+      error: `Missing required field: ${missing}`,
+    });
+  }
+
+  try {
+    const [rows] = await db.execute(
+      "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ? LIMIT 1",
+      [username]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    const user = rows[0];
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, fullname: user.fullname, lastname: user.lastname },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    setActiveToken(user.id, token);
+
+    res.json({ message: "Login successful", token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
 /**
  * @openapi
  * /login:

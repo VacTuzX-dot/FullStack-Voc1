@@ -78,7 +78,7 @@ router.get("/", verifyToken, async (req, res) => {
     const offset = limit !== null ? Math.max(0, (page - 1) * limit) : 0;
 
     let sql =
-      "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users";
+      "SELECT id, firstname, fullname, lastname, username, address, sex, birthday, status, created_at, updated_at FROM tbl_users";
     if (limit !== null) {
       // Use string interpolation for LIMIT/OFFSET since mysql2 prepared statements
       // can have issues with integer parameters
@@ -153,7 +153,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     const { id } = req.params;
 
     const rows = await runQuery(
-      "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users WHERE id = ?",
+      "SELECT id, firstname, fullname, lastname, username, address, sex, birthday, status, created_at, updated_at FROM tbl_users WHERE id = ?",
       [id]
     );
 
@@ -223,6 +223,9 @@ router.post("/", async (req, res) => {
       lastname,
       username,
       password,
+      address = null,
+      sex = null,
+      birthday = null,
       status = "active",
     } = req.body;
 
@@ -244,10 +247,20 @@ router.post("/", async (req, res) => {
 
     const [result] = await db.execute(
       `
-        INSERT INTO tbl_users (firstname, fullname, lastname, username, password, status)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO tbl_users (firstname, fullname, lastname, username, password, address, sex, birthday, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
-      [firstname, fullname, lastname, username, hashed, status]
+      [
+        firstname,
+        fullname,
+        lastname,
+        username,
+        hashed,
+        address,
+        sex,
+        birthday,
+        status,
+      ]
     );
 
     res.status(201).json({
@@ -326,8 +339,17 @@ router.post("/", async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstname, fullname, lastname, username, password, status } =
-      req.body;
+    const {
+      firstname,
+      fullname,
+      lastname,
+      username,
+      password,
+      address,
+      sex,
+      birthday,
+      status,
+    } = req.body;
 
     // dynamic fields
     const fields = [];
@@ -348,6 +370,18 @@ router.put("/:id", verifyToken, async (req, res) => {
     if (username !== undefined) {
       fields.push("username = ?");
       params.push(username);
+    }
+    if (address !== undefined) {
+      fields.push("address = ?");
+      params.push(address);
+    }
+    if (sex !== undefined) {
+      fields.push("sex = ?");
+      params.push(sex);
+    }
+    if (birthday !== undefined) {
+      fields.push("birthday = ?");
+      params.push(birthday);
     }
     if (status !== undefined) {
       fields.push("status = ?");
