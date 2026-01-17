@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { navigate } from "astro:transitions/client";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_ENDPOINTS } from "../config/api.js";
@@ -84,7 +85,7 @@ export default function LoginForm() {
             timerProgressBar: true,
           });
 
-          window.location.href = "/admin/users";
+          navigate("/admin/users");
         } else {
           Swal.fire({
             title: "เข้าสู่ระบบล้มเหลว",

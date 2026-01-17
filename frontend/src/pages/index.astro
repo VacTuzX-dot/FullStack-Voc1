@@ -68,6 +68,8 @@ const searchQuery = Astro.url.searchParams.get('search') || '';
 </style>
 
 <script>
+  import { navigate } from 'astro:transitions/client';
+
   const form = document.getElementById('searchForm');
   const input = document.getElementById('searchInput');
   
@@ -75,9 +77,9 @@ const searchQuery = Astro.url.searchParams.get('search') || '';
     e.preventDefault();
     const query = (input as HTMLInputElement)?.value.trim();
     if (query) {
-      window.location.href = `/?search=${encodeURIComponent(query)}`;
+      navigate(`/?search=${encodeURIComponent(query)}`);
     } else {
-      window.location.href = '/';
+      navigate('/');
     }
   });
 </script>

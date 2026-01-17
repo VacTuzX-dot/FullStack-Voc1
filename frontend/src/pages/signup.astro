@@ -157,6 +157,7 @@ import Layout from '../layouts/Layout.astro';
 
 <script>
   import Swal from 'sweetalert2';
+  import { navigate } from 'astro:transitions/client';
   import { API_ENDPOINTS } from '../config/api.js';
   
   document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
@@ -201,7 +202,7 @@ import Layout from '../layouts/Layout.astro';
           timer: 2000,
           showConfirmButton: false
         });
-        window.location.href = '/signin';
+        navigate('/signin');
       } else {
         Swal.fire({
           title: 'เกิดข้อผิดพลาด',

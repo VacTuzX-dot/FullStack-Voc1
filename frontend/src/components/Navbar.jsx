@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { navigate } from "astro:transitions/client";
 import { cardData } from "./Card.jsx";
 
 export default function Navbar({ pathname: initialPathname = "/" }) {
@@ -37,7 +38,7 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
     if (!isClient) return;
     localStorage.removeItem("token");
     setToken(null);
-    window.location.href = "/signin";
+    navigate("/signin");
   };
 
   const toggleNavbar = () => setIsCollapsed(!isCollapsed);
@@ -52,9 +53,7 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/?search=${encodeURIComponent(
-        searchQuery.trim(),
-      )}`;
+      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
