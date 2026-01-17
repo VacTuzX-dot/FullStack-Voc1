@@ -38,7 +38,7 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
     if (!isClient) return;
     localStorage.removeItem("token");
     setToken(null);
-    navigate("/signin");
+    navigate("/signin/");
   };
 
   const toggleNavbar = () => setIsCollapsed(!isCollapsed);
@@ -65,9 +65,9 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
 
   const navLinks = [
     { href: "/", icon: "bi-house", label: "Home" },
-    { href: "/about", icon: "bi-info-circle", label: "About" },
-    { href: "/service", icon: "bi-gear", label: "Services" },
-    { href: "/contact", icon: "bi-envelope", label: "Contact" },
+    { href: "/about/", icon: "bi-info-circle", label: "About" },
+    { href: "/service/", icon: "bi-gear", label: "Services" },
+    { href: "/contact/", icon: "bi-envelope", label: "Contact" },
   ];
 
   if (!isClient) {
@@ -201,11 +201,11 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
               <i className="bi bi-box-arrow-right"></i>
             </button>
           ) : currentPath === "/signin" ? (
-            <a href="/signup" className="btn btn-sm btn-primary">
+            <a href="/signup/" className="btn btn-sm btn-primary">
               <i className="bi bi-person-plus"></i>
             </a>
           ) : (
-            <a href="/signin" className="btn btn-sm btn-primary">
+            <a href="/signin/" className="btn btn-sm btn-primary">
               <i className="bi bi-person"></i>
             </a>
           )}
@@ -262,11 +262,11 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
                 <i className="bi bi-box-arrow-right me-1"></i>Sign Out
               </button>
             ) : currentPath === "/signin" ? (
-              <a href="/signup" className="btn btn-primary btn-sm">
+              <a href="/signup/" className="btn btn-primary btn-sm">
                 <i className="bi bi-person-plus me-1"></i>Sign Up
               </a>
             ) : (
-              <a href="/signin" className="btn btn-primary btn-sm">
+              <a href="/signin/" className="btn btn-primary btn-sm">
                 <i className="bi bi-person me-1"></i>Sign In
               </a>
             )}
