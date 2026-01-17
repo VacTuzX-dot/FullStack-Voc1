@@ -157,6 +157,7 @@ import Layout from '../layouts/Layout.astro';
 
 <script>
   import Swal from 'sweetalert2';
+  import { API_ENDPOINTS } from '../config/api.js';
   
   document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -184,7 +185,7 @@ import Layout from '../layouts/Layout.astro';
     };
     
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/auth/register', {
+      const res = await fetch(API_ENDPOINTS.register, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

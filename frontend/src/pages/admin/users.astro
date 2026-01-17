@@ -50,6 +50,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <script>
   import Swal from 'sweetalert2';
+  import { API_ENDPOINTS } from '../../config/api.js';
   
   // Check auth
   const token = localStorage.getItem('token');
@@ -64,7 +65,7 @@ import Layout from '../../layouts/Layout.astro';
     const tbody = document.getElementById('usersTableBody');
     
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+      const res = await fetch(API_ENDPOINTS.users, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -123,7 +124,7 @@ import Layout from '../../layouts/Layout.astro';
     
     if (result.isConfirmed) {
       try {
-        await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
+        await fetch(API_ENDPOINTS.userById(id), {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });

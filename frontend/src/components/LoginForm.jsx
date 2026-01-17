@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_ENDPOINTS } from "../config/api.js";
 
 const animations = {
   fadeIn: {
@@ -61,15 +62,12 @@ export default function LoginForm() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-        const res = await fetch(
-          "https://backend-nextjs-virid.vercel.app/api/auth/login",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-            signal: controller.signal,
-          }
-        );
+        const res = await fetch(API_ENDPOINTS.login, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          signal: controller.signal,
+        });
 
         clearTimeout(timeoutId);
         const data = await res.json();
@@ -111,7 +109,7 @@ export default function LoginForm() {
         setLoading(false);
       }
     },
-    [username, password]
+    [username, password],
   );
 
   return (
