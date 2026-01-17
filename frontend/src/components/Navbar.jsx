@@ -1,19 +1,36 @@
 import { useState, useEffect } from "react";
 import { cardData } from "./Card.jsx";
 
-export default function Navbar({ pathname = "/" }) {
+export default function Navbar({ pathname: initialPathname = "/" }) {
   const [tokenState, setToken] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [currentPath, setCurrentPath] = useState(initialPathname);
 
-  const isActive = (href) => pathname === href;
+  // Normalize path by removing trailing slash (except for root "/")
+  const normalizePath = (path) => {
+    return path === "/" ? path : path.replace(/\/$/, "");
+  };
+
+  const isActive = (href) => normalizePath(currentPath) === normalizePath(href);
 
   useEffect(() => {
     setIsClient(true);
     const token = localStorage.getItem("token");
     setToken(token);
+
+    // Update path on mount and subsequent navigations
+    const updatePath = () => setCurrentPath(window.location.pathname);
+    updatePath();
+
+    // Listen for Astro's View Transition events
+    document.addEventListener("astro:page-load", updatePath);
+
+    return () => {
+      document.removeEventListener("astro:page-load", updatePath);
+    };
   }, []);
 
   const handleSignOut = () => {

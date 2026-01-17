@@ -24,13 +24,18 @@ import Layout from '../../layouts/Layout.astro';
           <p class="mt-2">Loading users...</p>
         </div>
         
-        <div id="usersTable" class="d-none">
-          <table class="table table-hover">
-            <thead>
+        <div id="usersTable" class="d-none table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
               <tr>
                 <th>ID</th>
                 <th>Username</th>
+                <th>Prefix</th>
                 <th>Name</th>
+                <th>Surname</th>
+                <th>Sex</th>
+                <th>Birthday</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -78,13 +83,22 @@ import Layout from '../../layouts/Layout.astro';
         tbody.innerHTML = users.map((user: any) => `
           <tr>
             <td>${user.id}</td>
-            <td>${user.username}</td>
-            <td>${user.fullname} ${user.lastname}</td>
+            <td><span class="fw-bold">${user.username}</span></td>
+            <td>${user.firstname || '-'}</td>
+            <td>${user.fullname}</td>
+            <td>${user.lastname}</td>
+            <td>${user.sex || '-'}</td>
+            <td>${user.birthday ? new Date(user.birthday).toLocaleDateString('th-TH') : '-'}</td>
             <td>
-              <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser(${user.id})">
+              <span class="badge ${user.status === 'active' ? 'text-bg-success' : 'text-bg-secondary'}">
+                ${user.status}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser(${user.id})" title="Edit">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${user.id})">
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${user.id})" title="Delete">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
@@ -116,47 +130,76 @@ import Layout from '../../layouts/Layout.astro';
       const response = await res.json();
       const user = response.data;
       
+      // Format birthday for input type="date" (YYYY-MM-DD)
+      const birthdayVal = user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : '';
+      
       // Show edit form with SweetAlert2
       const { value: formValues } = await Swal.fire({
         title: '<i class="bi bi-pencil-square me-2"></i>Edit User',
         customClass: {
-          popup: 'swal-wide', // Optional: if we want to make it wider but shorter
+          popup: 'swal-wide',
         },
         html: `
           <div class="text-start">
             <div class="row g-2 mb-2">
-              <div class="col-12">
+              <div class="col-6">
                 <label class="form-label fw-bold small text-muted">Username</label>
                 <input id="swal-username" class="form-control" value="${user.username}" placeholder="Username">
+              </div>
+               <div class="col-6">
+                <label class="form-label fw-bold small text-muted">คำนำหน้า (Prefix)</label>
+                <input id="swal-firstname" class="form-control" value="${user.firstname || ''}" placeholder="นาย/นาง/นางสาว">
               </div>
             </div>
             
             <div class="row g-2 mb-2">
               <div class="col-6">
-                <label class="form-label fw-bold small text-muted">ชื่อ (Fullname)</label>
+                <label class="form-label fw-bold small text-muted">ชื่อ (Name)</label>
                 <input id="swal-fullname" class="form-control" value="${user.fullname || ''}" placeholder="Fullname">
               </div>
               <div class="col-6">
-                <label class="form-label fw-bold small text-muted">นามสกุล (Lastname)</label>
+                <label class="form-label fw-bold small text-muted">นามสกุล (Surname)</label>
                 <input id="swal-lastname" class="form-control" value="${user.lastname || ''}" placeholder="Lastname">
               </div>
             </div>
 
-            <div class="mb-2">
-              <label class="form-label fw-bold small text-muted">Status</label>
-              <select id="swal-status" class="form-select">
-                <option value="active" ${user.status === 'active' ? 'selected' : ''}>Active</option>
-                <option value="inactive" ${user.status === 'inactive' ? 'selected' : ''}>Inactive</option>
-              </select>
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label fw-bold small text-muted">เพศ (Sex)</label>
+                <select id="swal-sex" class="form-select">
+                  <option value="" ${!user.sex ? 'selected' : ''}>- เลือก -</option>
+                  <option value="ชาย" ${user.sex === 'ชาย' ? 'selected' : ''}>ชาย</option>
+                  <option value="หญิง" ${user.sex === 'หญิง' ? 'selected' : ''}>หญิง</option>
+                  <option value="อื่นๆ" ${user.sex === 'อื่นๆ' ? 'selected' : ''}>อื่นๆ</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-bold small text-muted">วันเกิด (Birthday)</label>
+                <input id="swal-birthday" type="date" class="form-control" value="${birthdayVal}">
+              </div>
             </div>
 
             <div class="mb-2">
-              <label class="form-label fw-bold small text-muted">รหัสผ่านใหม่ <span class="fw-normal">(เว้นว่างถ้าไม่เปลี่ยน)</span></label>
-              <input id="swal-password" type="password" class="form-control" placeholder="New Password">
+              <label class="form-label fw-bold small text-muted">ที่อยู่ (Address)</label>
+              <textarea id="swal-address" class="form-control" rows="2" placeholder="Address">${user.address || ''}</textarea>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label fw-bold small text-muted">Status</label>
+                <select id="swal-status" class="form-select">
+                  <option value="active" ${user.status === 'active' ? 'selected' : ''}>Active</option>
+                  <option value="inactive" ${user.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                </select>
+              </div>
+              <div class="col-6">
+                 <label class="form-label fw-bold small text-muted">รหัสผ่านใหม่ <span class="fw-normal small">(เว้นว่างถ้าไม่เปลี่ยน)</span></label>
+                 <input id="swal-password" type="password" class="form-control" placeholder="New Password">
+              </div>
             </div>
           </div>
         `,
-        width: '500px', // Set a reasonable fixed width
+        width: '600px',
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: 'Save',
@@ -165,8 +208,12 @@ import Layout from '../../layouts/Layout.astro';
         preConfirm: () => {
           return {
             username: (document.getElementById('swal-username') as HTMLInputElement).value,
+            firstname: (document.getElementById('swal-firstname') as HTMLInputElement).value,
             fullname: (document.getElementById('swal-fullname') as HTMLInputElement).value,
             lastname: (document.getElementById('swal-lastname') as HTMLInputElement).value,
+            sex: (document.getElementById('swal-sex') as HTMLSelectElement).value,
+            birthday: (document.getElementById('swal-birthday') as HTMLInputElement).value,
+            address: (document.getElementById('swal-address') as HTMLTextAreaElement).value,
             status: (document.getElementById('swal-status') as HTMLSelectElement).value,
             password: (document.getElementById('swal-password') as HTMLInputElement).value,
           };
@@ -177,8 +224,12 @@ import Layout from '../../layouts/Layout.astro';
         // Prepare update data (exclude empty password)
         const updateData: any = {
           username: formValues.username,
+          firstname: formValues.firstname,
           fullname: formValues.fullname,
           lastname: formValues.lastname,
+          sex: formValues.sex,
+          birthday: formValues.birthday,
+          address: formValues.address,
           status: formValues.status,
         };
         
