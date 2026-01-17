@@ -541,7 +541,7 @@ app.post("/api/auth/login", async (req, res) => {
   try {
     const [rows] = await db.execute(
       "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ? LIMIT 1",
-      [username]
+      [username],
     );
 
     if (rows.length === 0) {
@@ -558,7 +558,7 @@ app.post("/api/auth/login", async (req, res) => {
     const token = jwt.sign(
       { id: user.id, fullname: user.fullname, lastname: user.lastname },
       SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
     setActiveToken(user.id, token);
@@ -567,6 +567,51 @@ app.post("/api/auth/login", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Login failed" });
+  }
+});
+
+// Register API to match frontend signup form
+app.post("/api/auth/register", async (req, res) => {
+  const { firstname, lastname, email, username, password } = req.body;
+
+  // Validate required fields
+  const missing = requireFields({ firstname, lastname, username, password }, [
+    "firstname",
+    "lastname",
+    "username",
+    "password",
+  ]);
+  if (missing) {
+    return res.status(400).json({
+      error: `Missing required field: ${missing}`,
+    });
+  }
+
+  try {
+    // Check if username already exists
+    const [existing] = await db.execute(
+      "SELECT id FROM tbl_users WHERE username = ? LIMIT 1",
+      [username],
+    );
+
+    if (existing.length > 0) {
+      return res.status(409).json({ error: "Username already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+
+    // Insert new user - map frontend firstname to DB fullname
+    await db.execute(
+      `INSERT INTO tbl_users (firstname, fullname, lastname, username, password, status) 
+       VALUES (?, ?, ?, ?, ?, 'active')`,
+      ["", firstname, lastname, username, hashedPassword],
+    );
+
+    res.status(201).json({ message: "Registration successful" });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Registration failed" });
   }
 });
 
@@ -621,7 +666,7 @@ app.post("/login", async (req, res) => {
   try {
     const [rows] = await db.execute(
       "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ? LIMIT 1",
-      [username]
+      [username],
     );
 
     if (rows.length === 0) {
@@ -638,7 +683,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user.id, fullname: user.fullname, lastname: user.lastname },
       SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
     setActiveToken(user.id, token);

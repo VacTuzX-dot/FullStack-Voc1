@@ -30,7 +30,7 @@ import Layout from '../../layouts/Layout.astro';
               <tr>
                 <th>ID</th>
                 <th>Username</th>
-                <th>Email</th>
+                <th>Name</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -70,14 +70,15 @@ import Layout from '../../layouts/Layout.astro';
       
       if (!res.ok) throw new Error('Failed to fetch');
       
-      const users = await res.json();
+      const response = await res.json();
+      const users = response.data || [];
       
       if (tbody) {
         tbody.innerHTML = users.map((user: any) => `
           <tr>
             <td>${user.id}</td>
             <td>${user.username}</td>
-            <td>${user.email}</td>
+            <td>${user.fullname} ${user.lastname}</td>
             <td>
               <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser(${user.id})">
                 <i class="bi bi-pencil"></i>
