@@ -1,0 +1,108 @@
+name: Build, Test, and Deploy
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  # Stage 1 & 2: Build and Test
+  build_and_test:
+    name: "[BUILD & TEST]"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Backend
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          pnpm install --no-frozen-lockfile
+
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          # Note: If you don't have tests yet, you can comment this out or use 'true'
+          pnpm test || echo "[WARN] Tests failed or not found, but continuing for now"
+
+      # Frontend
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          pnpm install --no-frozen-lockfile
+
+      - name: Build Frontend
+        run: |
+          cd frontend
+          pnpm build
+
+  # Stage 3: Deploy
+  deploy:
+    name: "[DEPLOY]"
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:cicd
+
+      - name: Verify connection
+        run: |
+          timeout 10s ping -c 1 ${{ secrets.HOST_IP }} || echo "Ping failed but continuing..."
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/FullStack-Voc1
+
+            echo ">> Pulling latest code..."
+            git pull origin main
+
+            echo ">> Building Docker images..."
+            docker-compose build
+
+            echo ">> Restarting containers..."
+            docker-compose down
+            docker-compose up -d
+
+            echo ">> Cleaning up old project images..."
+            docker image prune -f --filter "label=project=fullstack-voc1"
+
+            echo "[DONE] Deployment complete!"

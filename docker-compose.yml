@@ -30,6 +30,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    labels:
+      - "project=fullstack-voc1"
 
   # Frontend (Astro static + nginx)
   frontend:
@@ -44,6 +46,8 @@ services:
       - backend
     networks:
       - app-network
+    labels:
+      - "project=fullstack-voc1"
 
 networks:
   app-network:
