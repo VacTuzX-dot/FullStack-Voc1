@@ -7,7 +7,7 @@ export default defineConfig({
   integrations: [react()],
   trailingSlash: "never",
   build: {
-    format: "file",
+    format: "directory",
   },
   vite: {
     ssr: {
