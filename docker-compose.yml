@@ -1,7 +1,6 @@
 # ===================================
 # Docker Compose for FullStack-Voc1
 # ===================================
-version: "3.8"
 
 services:
   # Backend API
