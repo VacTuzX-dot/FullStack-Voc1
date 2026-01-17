@@ -2,7 +2,7 @@ import { Prompt } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/nav";
 import Footer from "./components/footer";
-import { ReactLenis } from "lenis/react";
+import SmoothScroll from "./components/SmoothScroll";
 
 const prompt = Prompt({
   variable: "--font-prompt",
@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${prompt.variable} antialiased`} data-bs-theme="light">
         <Navbar />
-        <ReactLenis root>{children}</ReactLenis>
+        <SmoothScroll>{children}</SmoothScroll>
         <Footer />
         <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"

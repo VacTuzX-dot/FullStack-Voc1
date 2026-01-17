@@ -1,0 +1,360 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About Us - อินEar">
+  <div class="about-page">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-bg">
+        <img src="/images/bg2.png" alt="Background" class="bg-image" />
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <span class="badge-label">เกี่ยวกับเรา</span>
+          <h1 class="hero-title">
+            ยินดีต้อนรับสู่<br/>
+            <span class="highlight">อินEar</span>
+          </h1>
+          <p class="hero-subtitle">
+            เราคือชุมชนของนักเล่นเสียงที่หลงใหลในหูฟัง IEM และอุปกรณ์เสียงคุณภาพสูง
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-grid">
+          <!-- Image -->
+          <div class="about-image-wrapper">
+            <img 
+              src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.headphonesty.com%2Fwp-content%2Fuploads%2F2024%2F07%2FPromotion_on_the_worldwide_shipping-1100x500.jpg&f=1&nofb=1&ipt=50c9ffd6aa1b6987d0bcfcebf64c71327aced7d9b4d2fc6764beafe009ba6ba7"
+              alt="About IEM Audiophile"
+              class="about-image"
+            />
+          </div>
+
+          <!-- Content -->
+          <div class="about-content">
+            <h2>ความหลงใหลของเรา</h2>
+            <p>
+              ยินดีต้อนรับสู่ IEM Audiophile! เราคือกลุ่มผู้หลงใหลที่อุทิศตนเพื่อแบ่งปันความรู้ 
+              รีวิว และประสบการณ์เกี่ยวกับหูฟัง In-Ear Monitor (IEM) และอุปกรณ์เสียง
+            </p>
+            <p>
+              ไม่ว่าคุณจะเป็นนักเล่นเสียงรุ่นเก๋าหรือเพิ่งเริ่มต้นการเดินทาง 
+              ภารกิจของเราคือช่วยให้คุณค้นพบเสียงที่ดีที่สุดสำหรับความชอบเฉพาะตัวของคุณ
+            </p>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">รีวิว IEM</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">1K+</div>
+                <div class="stat-label">ผู้ติดตาม</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">3+</div>
+                <div class="stat-label">ปีประสบการณ์</div>
+              </div>
+            </div>
+
+            <a href="/contact" class="cta-btn">
+              <i class="bi bi-envelope me-2"></i>ติดต่อเรา
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+      <div class="container">
+        <div class="mission-header">
+          <h2>พันธกิจของเรา</h2>
+          <p>สิ่งที่เราตั้งใจทำเพื่อชุมชนนักเล่นเสียง</p>
+        </div>
+
+        <div class="mission-grid">
+          <div class="mission-card">
+            <div class="mission-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <h4>ค้นคว้าอย่างลึกซึ้ง</h4>
+            <p>เราทดสอบและรีวิวหูฟังทุกรุ่นอย่างละเอียดก่อนแนะนำ</p>
+          </div>
+
+          <div class="mission-card">
+            <div class="mission-icon">
+              <i class="bi bi-chat-heart"></i>
+            </div>
+            <h4>ซื่อสัตย์ตรงไปตรงมา</h4>
+            <p>รีวิวของเราไม่มีอคติ บอกทั้งจุดเด่นและจุดด้อย</p>
+          </div>
+
+          <div class="mission-card">
+            <div class="mission-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <h4>สร้างชุมชน</h4>
+            <p>เปิดพื้นที่ให้นักเล่นเสียงได้แลกเปลี่ยนความรู้</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .about-page {
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    min-height: 100vh;
+    color: white;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    position: relative;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+    filter: blur(4px);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 26, 0.9) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .badge-label {
+    display: inline-block;
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  .highlight {
+    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* About Section */
+  .about-section {
+    padding: 60px 0 80px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .about-image-wrapper {
+    position: relative;
+  }
+
+  .about-image {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .about-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .about-content p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .stat-card {
+    background: rgba(124, 58, 237, 0.1);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+    color: white;
+  }
+
+  /* Mission Section */
+  .mission-section {
+    padding: 0 0 80px;
+  }
+
+  .mission-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .mission-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .mission-header p {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .mission-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .mission-card:hover {
+    transform: translateY(-8px);
+    background: rgba(124, 58, 237, 0.1);
+    border-color: rgba(124, 58, 237, 0.3);
+  }
+
+  .mission-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+    border-radius: 16px;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
+  }
+
+  .mission-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .mission-card p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .mission-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

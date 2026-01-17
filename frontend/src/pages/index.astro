@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Carousel from '../components/Carousel.jsx';
+import Card from '../components/Card.jsx';
+
+const searchQuery = Astro.url.searchParams.get('search') || '';
+---
+
+<Layout title="อินEar - IEM Reviews & Recommendations">
+  <!-- Hero Carousel -->
+  <Carousel client:idle />
+  
+  <!-- Main Content -->
+  <div class="container py-5 content-section">
+    <!-- Hero Text -->
+    <div class="text-center mb-5">
+      <h1 class="display-5 fw-bold mb-3">ค้นหา IEM ที่ใช่สำหรับคุณ</h1>
+      <p class="lead text-muted mx-auto" style="max-width: 600px;">
+        รีวิวและแนะนำหูฟัง In-Ear Monitor คุณภาพสูง สำหรับนักฟังเพลงและนักดนตรี
+      </p>
+    </div>
+    
+    <!-- Search Bar (Desktop/Mobile) -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-8 col-lg-6">
+        <form id="searchForm" class="input-group shadow-sm">
+          <input 
+            type="search" 
+            id="searchInput"
+            class="form-control form-control-lg border-end-0" 
+            placeholder="ค้นหา IEM ที่คุณต้องการ..."
+            value={searchQuery}
+          />
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Products Section -->
+    <section>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">
+          <i class="bi bi-headphones me-2"></i>
+          {searchQuery ? `ผลลัพธ์สำหรับ "${searchQuery}"` : 'IEM ที่แนะนำ'}
+        </h2>
+        {searchQuery && (
+          <a href="/" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-x me-1"></i>ล้างการค้นหา
+          </a>
+        )}
+      </div>
+      
+      <Card client:load searchQuery={searchQuery} />
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('searchInput');
+  
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = (input as HTMLInputElement)?.value.trim();
+    if (query) {
+      window.location.href = `/?search=${encodeURIComponent(query)}`;
+    } else {
+      window.location.href = '/';
+    }
+  });
+</script>
