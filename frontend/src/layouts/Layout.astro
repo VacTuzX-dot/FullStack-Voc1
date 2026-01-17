@@ -33,7 +33,9 @@ const { title, description = 'Frontend from abyss' } = Astro.props;
     <ViewTransitions />
   </head>
   <body data-bs-theme="light">
-    <Navbar client:load pathname={Astro.url.pathname} />
+    <div transition:persist>
+      <Navbar client:load pathname={Astro.url.pathname} />
+    </div>
     <main>
       <slot />
     </main>
