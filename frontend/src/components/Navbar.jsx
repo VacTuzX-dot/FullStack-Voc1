@@ -201,7 +201,7 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
             >
               <i className="bi bi-box-arrow-right"></i>
             </button>
-          ) : pathname === "/signin" ? (
+          ) : currentPath === "/signin" ? (
             <a href="/signup" className="btn btn-sm btn-primary">
               <i className="bi bi-person-plus"></i>
             </a>
@@ -262,7 +262,7 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
               >
                 <i className="bi bi-box-arrow-right me-1"></i>Sign Out
               </button>
-            ) : pathname === "/signin" ? (
+            ) : currentPath === "/signin" ? (
               <a href="/signup" className="btn btn-primary btn-sm">
                 <i className="bi bi-person-plus me-1"></i>Sign Up
               </a>

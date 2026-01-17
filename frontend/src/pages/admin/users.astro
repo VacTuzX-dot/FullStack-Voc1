@@ -35,6 +35,8 @@ import Layout from '../../layouts/Layout.astro';
                 <th>Surname</th>
                 <th>Sex</th>
                 <th>Birthday</th>
+                <th>Address</th>
+                <th>Created At</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -89,6 +91,8 @@ import Layout from '../../layouts/Layout.astro';
             <td>${user.lastname}</td>
             <td>${user.sex || '-'}</td>
             <td>${user.birthday ? new Date(user.birthday).toLocaleDateString('th-TH') : '-'}</td>
+            <td class="text-truncate" style="max-width: 150px;" title="${user.address || ''}">${user.address || '-'}</td>
+            <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('th-TH') : '-'}</td>
             <td>
               <span class="badge ${user.status === 'active' ? 'text-bg-success' : 'text-bg-secondary'}">
                 ${user.status}
