@@ -103,13 +103,105 @@ import Layout from '../../layouts/Layout.astro';
   
   loadUsers();
   
-  // Add to window for onclick handlers
-  (window as any).editUser = (id: number) => {
-    Swal.fire({
-      title: 'Edit User',
-      text: `Edit user ID: ${id}`,
-      icon: 'info'
-    });
+  // Edit User function with modal
+  (window as any).editUser = async (id: number) => {
+    try {
+      // Fetch current user data
+      const res = await fetch(API_ENDPOINTS.userById(id), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) throw new Error('Failed to fetch user');
+      
+      const response = await res.json();
+      const user = response.data;
+      
+      // Show edit form with SweetAlert2
+      const { value: formValues } = await Swal.fire({
+        title: '<i class="bi bi-pencil-square me-2"></i>Edit User',
+        html: `
+          <div class="text-start">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Username</label>
+              <input id="swal-username" class="swal2-input w-100" value="${user.username}" placeholder="Username">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">ชื่อ (Fullname)</label>
+              <input id="swal-fullname" class="swal2-input w-100" value="${user.fullname || ''}" placeholder="Fullname">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">นามสกุล (Lastname)</label>
+              <input id="swal-lastname" class="swal2-input w-100" value="${user.lastname || ''}" placeholder="Lastname">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Status</label>
+              <select id="swal-status" class="swal2-select w-100">
+                <option value="active" ${user.status === 'active' ? 'selected' : ''}>Active</option>
+                <option value="inactive" ${user.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">รหัสผ่านใหม่ (เว้นว่างถ้าไม่ต้องการเปลี่ยน)</label>
+              <input id="swal-password" type="password" class="swal2-input w-100" placeholder="New Password">
+            </div>
+          </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: '<i class="bi bi-check-lg me-1"></i>Save',
+        cancelButtonText: '<i class="bi bi-x-lg me-1"></i>Cancel',
+        confirmButtonColor: '#7c3aed',
+        preConfirm: () => {
+          return {
+            username: (document.getElementById('swal-username') as HTMLInputElement).value,
+            fullname: (document.getElementById('swal-fullname') as HTMLInputElement).value,
+            lastname: (document.getElementById('swal-lastname') as HTMLInputElement).value,
+            status: (document.getElementById('swal-status') as HTMLSelectElement).value,
+            password: (document.getElementById('swal-password') as HTMLInputElement).value,
+          };
+        }
+      });
+
+      if (formValues) {
+        // Prepare update data (exclude empty password)
+        const updateData: any = {
+          username: formValues.username,
+          fullname: formValues.fullname,
+          lastname: formValues.lastname,
+          status: formValues.status,
+        };
+        
+        if (formValues.password) {
+          updateData.password = formValues.password;
+        }
+
+        // Send update request
+        const updateRes = await fetch(API_ENDPOINTS.userById(id), {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        if (updateRes.ok) {
+          Swal.fire({
+            title: 'Updated!',
+            text: 'User has been updated successfully.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+          loadUsers();
+        } else {
+          const error = await updateRes.json();
+          Swal.fire('Error!', error.message || 'Failed to update user.', 'error');
+        }
+      }
+    } catch (error) {
+      Swal.fire('Error!', 'Failed to load user data.', 'error');
+    }
   };
   
   (window as any).deleteUser = async (id: number) => {
