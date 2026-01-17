@@ -102,7 +102,7 @@ function hydrateDbMocks() {
 
     if (
       sql.includes(
-        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users"
+        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users",
       )
     ) {
       return [users.map(toPublicUser)];
@@ -132,7 +132,7 @@ function hydrateDbMocks() {
 
     if (
       sql.includes(
-        "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ?"
+        "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ?",
       )
     ) {
       const usernameParam = params[0];
@@ -142,7 +142,7 @@ function hydrateDbMocks() {
 
     if (
       sql.includes(
-        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users WHERE id = ?"
+        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users WHERE id = ?",
       )
     ) {
       const userId = Number(params[0]);
@@ -152,7 +152,7 @@ function hydrateDbMocks() {
 
     if (
       sql.includes(
-        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users"
+        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users",
       ) &&
       sql.includes("LIMIT ? OFFSET ?")
     ) {
@@ -224,7 +224,7 @@ async function loginAsSeed() {
 }
 
 async function createUser(payload) {
-  return request(app).post("/users").send(payload);
+  return request(app).post("/api/users").send(payload);
 }
 
 describe("Integration Test Suite", () => {
@@ -240,7 +240,7 @@ describe("Integration Test Suite", () => {
     const res = await request(app).get("/");
 
     expect(res.status).toBe(200);
-    expect(res.text).toMatch(/server is running/i);
+    expect(res.text).toMatch(/VacTuz API/i);
   });
 
   test("GET /api/data returns sample payload", async () => {
@@ -251,7 +251,7 @@ describe("Integration Test Suite", () => {
   });
 
   test("POST /users validates required fields", async () => {
-    const res = await request(app).post("/users").send({
+    const res = await request(app).post("/api/users").send({
       firstname: "No Username",
       fullname: "No Username",
       lastname: "User",
@@ -337,14 +337,14 @@ describe("Integration Test Suite", () => {
     expect(globalThis.__activeTokens.has(1)).toBe(false);
 
     const revokedRes = await request(app)
-      .get("/users")
+      .get("/api/users")
       .set("Authorization", `Bearer ${token}`);
     expect(revokedRes.status).toBe(403);
     expect(revokedRes.body.error).toMatch(/Session revoked/);
   });
 
   test("GET /users requires an auth token", async () => {
-    const res = await request(app).get("/users");
+    const res = await request(app).get("/api/users");
 
     expect(res.status).toBe(401);
     expect(res.body.error).toBe("No token provided");
@@ -352,7 +352,7 @@ describe("Integration Test Suite", () => {
 
   test("GET /users returns 403 for invalid token", async () => {
     const res = await request(app)
-      .get("/users")
+      .get("/api/users")
       .set("Authorization", "Bearer invalid-token");
 
     expect(res.status).toBe(403);
@@ -363,7 +363,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .get("/users")
+      .get("/api/users")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
@@ -386,7 +386,7 @@ describe("Integration Test Suite", () => {
     expect(token).toBeTruthy();
 
     const res = await request(app)
-      .get("/users")
+      .get("/api/users")
       .query({ limit: 1, page: 1 })
       .set("Authorization", `Bearer ${token}`);
 
@@ -403,7 +403,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .get("/users/1")
+      .get("/api/users/1")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
@@ -418,7 +418,7 @@ describe("Integration Test Suite", () => {
     });
 
     const res = await request(app)
-      .get("/users/9999")
+      .get("/api/users/9999")
       .set("Authorization", `Bearer ${login.body.token}`);
 
     expect(res.status).toBe(404);
@@ -426,7 +426,7 @@ describe("Integration Test Suite", () => {
   });
 
   test("POST /users requires password field", async () => {
-    const res = await request(app).post("/users").send({
+    const res = await request(app).post("/api/users").send({
       firstname: "No Password",
       fullname: "No Password",
       lastname: "User",
@@ -454,7 +454,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .put(`/users/${created.body.id}`)
+      .put(`/api/users/${created.body.id}`)
       .set("Authorization", `Bearer ${token}`)
       .send({ firstname: "Updated", status: "inactive" });
 
@@ -462,7 +462,7 @@ describe("Integration Test Suite", () => {
     expect(res.body.message).toMatch(/updated/);
 
     const fetchRes = await request(app)
-      .get(`/users/${created.body.id}`)
+      .get(`/api/users/${created.body.id}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(fetchRes.body.data.firstname).toBe("Updated");
@@ -473,7 +473,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .put("/users/1")
+      .put("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .send({});
 
@@ -485,7 +485,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .put("/users/9999")
+      .put("/api/users/9999")
       .set("Authorization", `Bearer ${token}`)
       .send({ firstname: "Nobody" });
 
@@ -499,7 +499,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .put(`/users/${created.body.id}`)
+      .put(`/api/users/${created.body.id}`)
       .set("Authorization", `Bearer ${token}`)
       .send({ password: "updatedPass!234" });
 
@@ -520,13 +520,13 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .delete(`/users/${created.body.id}`)
+      .delete(`/api/users/${created.body.id}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
 
     const followUp = await request(app)
-      .get(`/users/${created.body.id}`)
+      .get(`/api/users/${created.body.id}`)
       .set("Authorization", `Bearer ${token}`);
     expect(followUp.status).toBe(404);
   });
@@ -535,7 +535,7 @@ describe("Integration Test Suite", () => {
     const token = await loginAsSeed();
 
     const res = await request(app)
-      .delete("/users/9999")
+      .delete("/api/users/9999")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(404);
@@ -546,7 +546,7 @@ describe("Integration Test Suite", () => {
     const newUser = buildUserPayload();
     const created = await createUser(newUser);
 
-    const res = await request(app).delete(`/users/${created.body.id}`);
+    const res = await request(app).delete(`/api/users/${created.body.id}`);
 
     expect(res.status).toBe(401);
     expect(res.body.error).toBe("No token provided");
