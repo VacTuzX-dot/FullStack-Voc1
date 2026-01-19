@@ -9,7 +9,7 @@
 // export const API_BASE_URL = 'http://192.168.0.234:3102';
 
 // Production (Custom domain)
-export const API_BASE_URL = "http://localhost:3000";
+export const API_BASE_URL = "http://localhost:3102";
 
 // API Endpoints
 export const API_ENDPOINTS = {
