@@ -200,9 +200,13 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
             >
               <i className="bi bi-box-arrow-right"></i>
             </button>
-          ) : currentPath === "/signin" ? (
+          ) : currentPath === "/signin" || currentPath === "/signin/" ? (
             <a href="/signup/" className="btn btn-sm btn-primary">
               <i className="bi bi-person-plus"></i>
+            </a>
+          ) : currentPath === "/signup" || currentPath === "/signup/" ? (
+            <a href="/signin/" className="btn btn-sm btn-primary">
+              <i className="bi bi-person"></i>
             </a>
           ) : (
             <a href="/signin/" className="btn btn-sm btn-primary">
@@ -261,9 +265,13 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
               >
                 <i className="bi bi-box-arrow-right me-1"></i>Sign Out
               </button>
-            ) : currentPath === "/signin" ? (
+            ) : currentPath === "/signin" || currentPath === "/signin/" ? (
               <a href="/signup/" className="btn btn-primary btn-sm">
                 <i className="bi bi-person-plus me-1"></i>Sign Up
+              </a>
+            ) : currentPath === "/signup" || currentPath === "/signup/" ? (
+              <a href="/signin/" className="btn btn-primary btn-sm">
+                <i className="bi bi-person me-1"></i>Sign In
               </a>
             ) : (
               <a href="/signin/" className="btn btn-primary btn-sm">
