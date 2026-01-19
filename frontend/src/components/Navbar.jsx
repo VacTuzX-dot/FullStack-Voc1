@@ -57,11 +57,24 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
     }
   };
 
-  const filteredResults = cardData.filter(
-    (card) =>
-      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.text.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredResults = cardData
+    .filter((card) =>
+      card.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const query = searchQuery.toLowerCase();
+      const aTitleLower = a.title.toLowerCase();
+      const bTitleLower = b.title.toLowerCase();
+
+      // Prioritize exact title match at start
+      const aStartsWith = aTitleLower.startsWith(query);
+      const bStartsWith = bTitleLower.startsWith(query);
+
+      if (aStartsWith && !bStartsWith) return -1;
+      if (!aStartsWith && bStartsWith) return 1;
+
+      return 0; // Keep original order if same priority
+    });
 
   const navLinks = [
     { href: "/", icon: "bi-house", label: "Home" },

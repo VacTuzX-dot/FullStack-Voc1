@@ -115,12 +115,9 @@ export default function Card({ searchQuery = "" }) {
     // ถ้าไม่มีการค้นหา แสดงทุกรายการ
     if (!searchQuery || searchQuery.trim() === "") return true;
 
-    // ถ้ามีการค้นหา กรองตามคำค้น
+    // ถ้ามีการค้นหา กรองตามคำค้น (เฉพาะชื่อ)
     const query = searchQuery.toLowerCase();
-    return (
-      card.title.toLowerCase().includes(query) ||
-      card.text.toLowerCase().includes(query)
-    );
+    return card.title.toLowerCase().includes(query);
   });
 
   if (filteredCards.length === 0) {
