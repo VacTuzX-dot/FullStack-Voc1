@@ -24,6 +24,12 @@ const inputStyles = `
   .form-control::placeholder {
     color: rgba(255, 255, 255, 0.7) !important;
   }
+  .swal-z-index-fix {
+    z-index: 10000 !important;
+  }
+  .swal2-container {
+    z-index: 10000 !important;
+  }
 `;
 
 export default function LoginForm() {
@@ -39,6 +45,9 @@ export default function LoginForm() {
       text: "กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน",
       icon: "info",
       confirmButtonText: "ตกลง",
+      customClass: {
+        container: "swal-z-index-fix",
+      },
     });
   };
 
@@ -53,6 +62,9 @@ export default function LoginForm() {
           icon: "warning",
           timer: 1500,
           showConfirmButton: false,
+          customClass: {
+            container: "swal-z-index-fix",
+          },
         });
         return;
       }
@@ -83,6 +95,9 @@ export default function LoginForm() {
             showConfirmButton: false,
             timer: 1500,
             timerProgressBar: true,
+            customClass: {
+              container: "swal-z-index-fix",
+            },
           });
 
           navigate("/admin/users");
@@ -93,6 +108,9 @@ export default function LoginForm() {
             icon: "error",
             timer: 1500,
             showConfirmButton: false,
+            customClass: {
+              container: "swal-z-index-fix",
+            },
           });
         }
       } catch (error) {
@@ -105,6 +123,9 @@ export default function LoginForm() {
           icon: "error",
           timer: 1500,
           showConfirmButton: false,
+          customClass: {
+            container: "swal-z-index-fix",
+          },
         });
       } finally {
         setLoading(false);
