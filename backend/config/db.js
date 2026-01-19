@@ -1,11 +1,14 @@
 import mysql from "mysql2/promise";
 import { config as loadEnv } from "dotenv";
 
-const envPath =
-  process.env.DOTENV_CONFIG_PATH ??
-  (process.env.NODE_ENV === "production" ? ".env.production" : ".env.local");
+// Only load .env file if DB_HOST is not already set (e.g., by Docker Compose)
+if (!process.env.DB_HOST) {
+  const envPath =
+    process.env.DOTENV_CONFIG_PATH ??
+    (process.env.NODE_ENV === "production" ? ".env.production" : ".env.local");
 
-loadEnv({ path: envPath, override: false });
+  loadEnv({ path: envPath, override: false });
+}
 
 // Optimized pool settings for handling multiple concurrent users
 const POOL_SIZE = parseInt(process.env.DB_POOL_SIZE || "50", 10);
