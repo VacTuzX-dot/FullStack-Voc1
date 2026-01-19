@@ -82,4 +82,16 @@ const searchQuery = Astro.url.searchParams.get('search') || '';
       navigate('/');
     }
   });
+
+  // Auto-scroll to results when search is performed
+  document.addEventListener('astro:page-load', () => {
+    const resultsSection = document.querySelector('.content-section');
+    const hasSearch = new URLSearchParams(window.location.search).get('search');
+    
+    if (resultsSection && hasSearch) {
+      setTimeout(() => {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  });
 </script>

@@ -111,11 +111,17 @@ const cardData = [
 export { cardData };
 
 export default function Card({ searchQuery = "" }) {
-  const filteredCards = cardData.filter(
-    (card) =>
-      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.text.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredCards = cardData.filter((card) => {
+    // ถ้าไม่มีการค้นหา แสดงทุกรายการ
+    if (!searchQuery || searchQuery.trim() === "") return true;
+
+    // ถ้ามีการค้นหา กรองตามคำค้น
+    const query = searchQuery.toLowerCase();
+    return (
+      card.title.toLowerCase().includes(query) ||
+      card.text.toLowerCase().includes(query)
+    );
+  });
 
   if (filteredCards.length === 0) {
     return (
