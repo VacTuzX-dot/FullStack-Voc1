@@ -22,7 +22,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Set environment
-ENV NODE_ENV=production
+
 ENV PORT=3000
 
 EXPOSE 3000
