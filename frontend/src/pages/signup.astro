@@ -25,13 +25,24 @@ import Layout from '../layouts/Layout.astro';
               
               <form id="signupForm">
                 <div class="row g-3">
-                  <div class="col-md-6">
+                  <div class="col-md-3">
+                    <label for="prefix" class="form-label text-light">
+                      <i class="bi bi-person-badge me-1"></i>คำนำหน้า
+                    </label>
+                    <select class="form-control form-input" id="prefix" required>
+                      <option value="">-- เลือก --</option>
+                      <option value="นาย">นาย</option>
+                      <option value="นาง">นาง</option>
+                      <option value="นางสาว">นางสาว</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
                     <label for="firstname" class="form-label text-light">
                       <i class="bi bi-person me-1"></i>ชื่อ
                     </label>
                     <input type="text" class="form-control form-input" id="firstname" placeholder="กรอกชื่อ" required />
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-5">
                     <label for="lastname" class="form-label text-light">
                       <i class="bi bi-person me-1"></i>นามสกุล
                     </label>
@@ -179,6 +190,7 @@ import Layout from '../layouts/Layout.astro';
     
     const formData = {
       firstname: (document.getElementById('firstname') as HTMLInputElement)?.value,
+      fullname: (document.getElementById('prefix') as HTMLSelectElement)?.value,
       lastname: (document.getElementById('lastname') as HTMLInputElement)?.value,
       email: (document.getElementById('email') as HTMLInputElement)?.value,
       username: (document.getElementById('username') as HTMLInputElement)?.value,
