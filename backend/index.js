@@ -36,7 +36,7 @@ const __dirname = path.dirname(__filename);
 // Serve favicon
 app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "njz.png"), {
-    headers: { "Content-Type": "image/x-icon" },
+    headers: { "Content-Type": "image/png" },
   });
 });
 
