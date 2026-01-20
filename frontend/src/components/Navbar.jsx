@@ -40,26 +40,38 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
 
   useEffect(() => {
     setIsClient(true);
-    const token = localStorage.getItem("token");
-    setToken(token);
 
-    // Decode token to get user role
-    if (token) {
-      const decoded = decodeToken(token);
-      if (decoded && decoded.status) {
-        setUserRole(decoded.status);
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setToken(token);
+
+      // Decode token to get user role
+      if (token) {
+        const decoded = decodeToken(token);
+        if (decoded && decoded.status) {
+          setUserRole(decoded.status);
+        }
+      } else {
+        setUserRole(null);
       }
-    }
+    };
 
     // Update path on mount and subsequent navigations
     const updatePath = () => setCurrentPath(window.location.pathname);
-    updatePath();
+
+    const onPageLoad = () => {
+      checkAuth();
+      updatePath();
+    };
+
+    // Initial check
+    onPageLoad();
 
     // Listen for Astro's View Transition events
-    document.addEventListener("astro:page-load", updatePath);
+    document.addEventListener("astro:page-load", onPageLoad);
 
     return () => {
-      document.removeEventListener("astro:page-load", updatePath);
+      document.removeEventListener("astro:page-load", onPageLoad);
     };
   }, []);
 
