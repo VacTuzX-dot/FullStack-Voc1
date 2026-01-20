@@ -23,7 +23,7 @@ import Layout from '../layouts/Layout.astro';
                 <p class="text-white-50">สร้างบัญชีผู้ใช้ใหม่</p>
               </div>
               
-              <form id="signupForm">
+              <form id="signupForm" novalidate>
                 <div class="row g-3">
                   <div class="col-md-3">
                     <label for="prefix" class="form-label text-light">
@@ -200,6 +200,47 @@ import Layout from '../layouts/Layout.astro';
   
   document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    const requiredFields = [
+      { id: 'prefix', label: 'คำนำหน้า' },
+      { id: 'firstname', label: 'ชื่อ' },
+      { id: 'lastname', label: 'นามสกุล' },
+      { id: 'sex', label: 'เพศ' },
+      { id: 'birthday', label: 'วันเกิด' },
+      { id: 'address', label: 'ที่อยู่' },
+      { id: 'email', label: 'อีเมล' },
+      { id: 'username', label: 'ชื่อผู้ใช้' },
+      { id: 'password', label: 'รหัสผ่าน' },
+      { id: 'confirmPassword', label: 'ยืนยันรหัสผ่าน' }
+    ];
+
+    for (const field of requiredFields) {
+      const element = document.getElementById(field.id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      if (!element || !element.value.trim()) {
+        Swal.fire({
+          title: 'ข้อมูลไม่ครบถ้วน',
+          text: `กรุณากรอก${field.label}`,
+          icon: 'warning',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        return;
+      }
+    }
+
+    // Validate Terms Checkbox
+    const terms = document.getElementById('terms') as HTMLInputElement;
+    if (!terms?.checked) {
+      Swal.fire({
+        title: 'ข้อตกลงการใช้งาน',
+        text: 'กรุณายอมรับเงื่อนไขการใช้งาน',
+        icon: 'warning',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
     
     const password = (document.getElementById('password') as HTMLInputElement)?.value;
     const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement)?.value;

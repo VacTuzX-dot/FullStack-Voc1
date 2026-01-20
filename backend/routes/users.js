@@ -237,6 +237,9 @@ router.post("/", async (req, res) => {
       "lastname",
       "username",
       "password",
+      "address",
+      "sex",
+      "birthday",
     ]);
     if (missing) {
       return res.status(400).json({
