@@ -5,6 +5,9 @@ const SECRET_KEY = process.env.JWT_SECRET;
 /**
  * Middleware to verify user has admin status
  * Must be used after verifyToken middleware
+ * @param {any} req
+ * @param {any} res
+ * @param {any} next
  */
 export default function requireAdmin(req, res, next) {
   // Check if user object exists (should be set by verifyToken middleware)

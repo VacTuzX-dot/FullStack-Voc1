@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   beforeAll,
   beforeEach,
@@ -15,6 +16,7 @@ process.env.BCRYPT_ROUNDS = "4";
 
 const fixedNow = new Date("2024-01-01T12:00:00.000Z");
 
+/** @type {any[]} */
 let users = [];
 let nextId = 1;
 let userCounter = 0;
@@ -43,7 +45,7 @@ const seedUser = {
   status: "active",
 };
 
-const toPublicUser = (user) => ({
+const toPublicUser = (/** @type {any} */ user) => ({
   id: user.id,
   firstname: user.firstname,
   fullname: user.fullname,
@@ -54,9 +56,10 @@ const toPublicUser = (user) => ({
   updated_at: user.updated_at,
 });
 
+/** @type {string} */
 let seedPasswordHash;
 
-const buildUserPayload = (overrides = {}) => {
+const buildUserPayload = (/** @type {any} */ overrides = {}) => {
   userCounter += 1;
   const suffix = userCounter;
   return {
@@ -91,7 +94,7 @@ function hydrateDbMocks() {
   mockQuery.mockReset();
   mockExecute.mockReset();
 
-  mockQuery.mockImplementation(async (sql) => {
+  mockQuery.mockImplementation(async (/** @type {string} */ sql) => {
     if (sql.includes("SELECT NOW() AS now")) {
       return [[{ now: fixedNow }]];
     }
@@ -111,95 +114,103 @@ function hydrateDbMocks() {
     return [[]];
   });
 
-  mockExecute.mockImplementation(async (sql, params = []) => {
-    if (sql.includes("INSERT INTO tbl_users")) {
-      const [firstname, fullname, lastname, username, hashedPassword, status] =
-        params;
-      const newUser = {
-        id: nextId++,
-        firstname,
-        fullname,
-        lastname,
-        username,
-        password: hashedPassword,
-        status,
-        created_at: fixedNow,
-        updated_at: fixedNow,
-      };
-      users.push(newUser);
-      return [{ insertId: newUser.id, affectedRows: 1 }];
-    }
-
-    if (
-      sql.includes(
-        "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ?",
-      )
-    ) {
-      const usernameParam = params[0];
-      const user = users.find((u) => u.username === usernameParam);
-      return [user ? [user] : []];
-    }
-
-    if (
-      sql.includes(
-        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users WHERE id = ?",
-      )
-    ) {
-      const userId = Number(params[0]);
-      const user = users.find((u) => u.id === userId);
-      return [user ? [toPublicUser(user)] : []];
-    }
-
-    if (
-      sql.includes(
-        "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users",
-      ) &&
-      sql.includes("LIMIT ? OFFSET ?")
-    ) {
-      const [limit, offset] = params.map((val) => Number(val));
-      const start = Number.isNaN(offset) ? 0 : offset;
-      const end = Number.isNaN(limit) ? users.length : start + limit;
-      return [users.slice(start, end).map(toPublicUser)];
-    }
-
-    if (sql.startsWith("UPDATE tbl_users SET")) {
-      const targetId = Number(params[params.length - 1]);
-      const user = users.find((u) => u.id === targetId);
-      if (!user) return [{ affectedRows: 0 }];
-
-      const assignments = sql
-        .split("SET")[1]
-        .split("WHERE")[0]
-        .split(",")
-        .map((part) => part.trim());
-
-      let paramIndex = 0;
-      for (const statement of assignments) {
-        const [field] = statement.split(" = ");
-        if (statement.includes("?")) {
-          const value = params[paramIndex++];
-          if (field === "password") {
-            user.password = value;
-          } else {
-            user[field] = value;
-          }
-        } else if (field === "updated_at") {
-          user.updated_at = fixedNow;
-        }
+  mockExecute.mockImplementation(
+    async (/** @type {string} */ sql, /** @type {any[]} */ params = []) => {
+      if (sql.includes("INSERT INTO tbl_users")) {
+        const [
+          firstname,
+          fullname,
+          lastname,
+          username,
+          hashedPassword,
+          status,
+        ] = params;
+        const newUser = {
+          id: nextId++,
+          firstname,
+          fullname,
+          lastname,
+          username,
+          password: hashedPassword,
+          status,
+          created_at: fixedNow,
+          updated_at: fixedNow,
+        };
+        users.push(newUser);
+        return [{ insertId: newUser.id, affectedRows: 1 }];
       }
 
-      return [{ affectedRows: 1 }];
-    }
+      if (
+        sql.includes(
+          "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ?",
+        )
+      ) {
+        const usernameParam = params[0];
+        const user = users.find((u) => u.username === usernameParam);
+        return [user ? [user] : []];
+      }
 
-    if (sql.includes("DELETE FROM tbl_users WHERE id = ?")) {
-      const userId = Number(params[0]);
-      const before = users.length;
-      users = users.filter((user) => user.id !== userId);
-      return [{ affectedRows: before !== users.length ? 1 : 0 }];
-    }
+      if (
+        sql.includes(
+          "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users WHERE id = ?",
+        )
+      ) {
+        const userId = Number(params[0]);
+        const user = users.find((u) => u.id === userId);
+        return [user ? [toPublicUser(user)] : []];
+      }
 
-    return [[]];
-  });
+      if (
+        sql.includes(
+          "SELECT id, firstname, fullname, lastname, username, status, created_at, updated_at FROM tbl_users",
+        ) &&
+        sql.includes("LIMIT ? OFFSET ?")
+      ) {
+        const [limit, offset] = params.map((val) => Number(val));
+        const start = Number.isNaN(offset) ? 0 : offset;
+        const end = Number.isNaN(limit) ? users.length : start + limit;
+        return [users.slice(start, end).map(toPublicUser)];
+      }
+
+      if (sql.startsWith("UPDATE tbl_users SET")) {
+        const targetId = Number(params[params.length - 1]);
+        const user = users.find((u) => u.id === targetId);
+        if (!user) return [{ affectedRows: 0 }];
+
+        const assignments = sql
+          .split("SET")[1]
+          .split("WHERE")[0]
+          .split(",")
+          .map((part) => part.trim());
+
+        let paramIndex = 0;
+        for (const statement of assignments) {
+          const [field] = statement.split(" = ");
+          if (statement.includes("?")) {
+            const value = params[paramIndex++];
+            if (field === "password") {
+              user.password = value;
+            } else {
+              user[field] = value;
+            }
+          } else if (field === "updated_at") {
+            user.updated_at = fixedNow;
+          }
+        }
+
+        return [{ affectedRows: 1 }];
+      }
+
+      if (sql.includes("DELETE FROM tbl_users WHERE id = ?")) {
+        const userId = Number(params[0]);
+        const before = users.length;
+        users = users.filter((user) => user.id !== userId);
+        return [{ affectedRows: before !== users.length ? 1 : 0 }];
+      }
+
+      return [[]];
+    },
+  );
 }
 
 beforeAll(async () => {
@@ -223,7 +234,7 @@ async function loginAsSeed() {
   return res.body.token;
 }
 
-async function createUser(payload) {
+async function createUser(/** @type {any} */ payload) {
   return request(app).post("/api/users").send(payload);
 }
 

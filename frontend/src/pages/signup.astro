@@ -49,8 +49,35 @@ import Layout from '../layouts/Layout.astro';
                     <input type="text" class="form-control form-input" id="lastname" placeholder="กรอกนามสกุล" required />
                   </div>
                 </div>
-                
+
+                <div class="row g-3 mt-1">
+                  <div class="col-md-4">
+                    <label for="sex" class="form-label text-light">
+                      <i class="bi bi-gender-ambiguous me-1"></i>เพศ
+                    </label>
+                    <select class="form-control form-input" id="sex" required>
+                      <option value="">-- เลือก --</option>
+                      <option value="ชาย">ชาย</option>
+                      <option value="หญิง">หญิง</option>
+                      <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8">
+                    <label for="birthday" class="form-label text-light">
+                      <i class="bi bi-calendar-date me-1"></i>วันเกิด
+                    </label>
+                    <input type="date" class="form-control form-input" id="birthday" required />
+                  </div>
+                </div>
+
                 <div class="mb-3 mt-3">
+                  <label for="address" class="form-label text-light">
+                    <i class="bi bi-geo-alt me-1"></i>ที่อยู่
+                  </label>
+                  <textarea class="form-control form-input" id="address" rows="2" placeholder="กรอกที่อยู่" required></textarea>
+                </div>
+                
+                <div class="mb-3">
                   <label for="email" class="form-label text-light">
                     <i class="bi bi-envelope me-1"></i>อีเมล
                   </label>
@@ -68,14 +95,14 @@ import Layout from '../layouts/Layout.astro';
                   <label for="password" class="form-label text-light">
                     <i class="bi bi-lock me-1"></i>รหัสผ่าน
                   </label>
-                  <input type="password" class="form-control form-input" id="password" placeholder="กรอกรหัสผ่าน" required />
+                  <input type="password" class="form-control form-input" id="password" placeholder="กรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร" minlength="6" required />
                 </div>
                 
                 <div class="mb-3">
                   <label for="confirmPassword" class="form-label text-light">
                     <i class="bi bi-lock-fill me-1"></i>ยืนยันรหัสผ่าน
                   </label>
-                  <input type="password" class="form-control form-input" id="confirmPassword" placeholder="ยืนยันรหัสผ่าน" required />
+                  <input type="password" class="form-control form-input" id="confirmPassword" placeholder="ยืนยันรหัสผ่าน" minlength="6" required />
                 </div>
                 
                 <div class="form-check mb-4">
@@ -177,6 +204,17 @@ import Layout from '../layouts/Layout.astro';
     const password = (document.getElementById('password') as HTMLInputElement)?.value;
     const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement)?.value;
     
+    if (password.length < 6) {
+      Swal.fire({
+        title: 'รหัสผ่านสั้นเกินไป',
+        text: 'กรุณากรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร',
+        icon: 'error',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+    
     if (password !== confirmPassword) {
       Swal.fire({
         title: 'รหัสผ่านไม่ตรงกัน',
@@ -189,9 +227,12 @@ import Layout from '../layouts/Layout.astro';
     }
     
     const formData = {
-      firstname: (document.getElementById('firstname') as HTMLInputElement)?.value,
-      fullname: (document.getElementById('prefix') as HTMLSelectElement)?.value,
+      firstname: (document.getElementById('prefix') as HTMLSelectElement)?.value, // Map Prefix to firstname
+      fullname: (document.getElementById('firstname') as HTMLInputElement)?.value, // Map First Name to fullname
       lastname: (document.getElementById('lastname') as HTMLInputElement)?.value,
+      sex: (document.getElementById('sex') as HTMLSelectElement)?.value,
+      birthday: (document.getElementById('birthday') as HTMLInputElement)?.value,
+      address: (document.getElementById('address') as HTMLTextAreaElement)?.value,
       email: (document.getElementById('email') as HTMLInputElement)?.value,
       username: (document.getElementById('username') as HTMLInputElement)?.value,
       password: password

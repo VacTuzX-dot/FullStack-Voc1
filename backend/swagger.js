@@ -3,13 +3,13 @@ import swaggerUi from "swagger-ui-express";
 // Translations for Thai and English
 const translations = {
   en: {
-    title: "🚀 BackEnd API",
+    title: "BackEnd API",
     description: `
 # Welcome to the BackEnd API Documentation
 
 This API provides comprehensive user management and authentication services.
 
-## 🔐 How to Authenticate
+## How to Authenticate
 
 ### Step 1: Register (if you don't have an account)
 Use \`POST /api/users\` to create a new account:
@@ -34,32 +34,31 @@ Use \`POST /login\` with your credentials:
 
 ### Step 3: Authorize
 1. Copy the \`token\` from login response
-2. Click the **🔓 Authorize** button (top right)
+2. Click the **Authorize** button (top right)
 3. Paste your token (without "Bearer " prefix)
 4. Click **Authorize**
 
-Now you can access protected endpoints! 🎉
+Now you can access protected endpoints!
 
-## 📚 Quick Reference
+## Quick Reference
 | Action | Endpoint | Auth Required |
 |--------|----------|---------------|
-| Register | \`POST /api/users\` | ❌ No |
-| Login | \`POST /login\` | ❌ No |
-| Logout | \`POST /logout\` | ✅ Yes |
-| List Users | \`GET /api/users\` | ✅ Yes |
-| Get User | \`GET /api/users/:id\` | ✅ Yes |
-| Update User | \`PUT /api/users/:id\` | ✅ Yes |
-| Delete User | \`DELETE /api/users/:id\` | ✅ Yes |
+| Register | \`POST /api/users\` | No |
+| Login | \`POST /login\` | No |
+| Logout | \`POST /logout\` | Yes |
+| List Users | \`GET /api/users\` | Yes |
+| Get User | \`GET /api/users/:id\` | Yes |
+| Update User | \`PUT /api/users/:id\` | Yes |
+| Delete User | \`DELETE /api/users/:id\` | Yes |
 
 ---
     `,
-    externalDocs: "📖 Learn more about this API",
+    externalDocs: "Learn more about this API",
     tags: {
-      health:
-        "🏥 **Health Check Endpoints** — Monitor server and database status",
-      auth: "🔐 **Authentication** — Login, logout, and session management",
-      users: "👥 **User Management** — CRUD operations for user accounts",
-      misc: "🔧 **Miscellaneous** — Other utility endpoints",
+      health: "Health Check Endpoints — Monitor server and database status",
+      auth: "Authentication — Login, logout, and session management",
+      users: "User Management — CRUD operations for user accounts",
+      misc: "Miscellaneous — Other utility endpoints",
     },
     endpoints: {
       root: {
@@ -71,31 +70,31 @@ Now you can access protected endpoints! 🎉
         desc: "Returns the current database server time to verify connectivity",
       },
       getAllUsers: {
-        summary: "📋 Get all users",
-        desc: "Retrieve a paginated list of all users. **🔒 Requires authentication** - Click Authorize button first!",
+        summary: "Get all users",
+        desc: "Retrieve a paginated list of all users. **Requires authentication** - Click Authorize button first!",
       },
       getUserById: {
-        summary: "👤 Get user by ID",
-        desc: "Retrieve a single user by their ID. **🔒 Requires authentication**",
+        summary: "Get user by ID",
+        desc: "Retrieve a single user by their ID. **Requires authentication**",
       },
       createUser: {
-        summary: "📝 Register new user",
+        summary: "Register new user",
         desc: "Create a new user account. **No authentication required** - Use this to create an account, then login!",
       },
       updateUser: {
-        summary: "✏️ Update user",
-        desc: "Update an existing user's information. **🔒 Requires authentication**",
+        summary: "Update user",
+        desc: "Update an existing user's information. **Requires authentication**",
       },
       deleteUser: {
-        summary: "🗑️ Delete user",
-        desc: "Delete a user by their ID. **🔒 Requires authentication**",
+        summary: "Delete user",
+        desc: "Delete a user by their ID. **Requires authentication**",
       },
       login: {
-        summary: "🔑 User login",
+        summary: "User login",
         desc: "Authenticate with username and password to receive a JWT token. Use this token in the Authorize button to access protected endpoints.",
       },
       logout: {
-        summary: "🚪 User logout",
+        summary: "User logout",
         desc: "Invalidate the current user's session. **Requires authentication** - You must be logged in first.",
       },
       cors: {
@@ -104,12 +103,12 @@ Now you can access protected endpoints! 🎉
       },
     },
     responses: {
-      success: "✅ Success",
+      success: "Success",
       unauthorized:
-        "🔒 Unauthorized - Please login and use Authorize button first",
-      notFound: "🔍 Not found",
-      badRequest: "❌ Bad request",
-      serverError: "❌ Server error",
+        "Unauthorized - Please login and use Authorize button first",
+      notFound: "Not found",
+      badRequest: "Bad request",
+      serverError: "Server error",
     },
     params: {
       limit: "Number of users per page (max 100)",
@@ -123,13 +122,13 @@ Now you can access protected endpoints! 🎉
       "**How to use:** \\n1. Login first using POST /login \\n2. Copy the `token` from response \\n3. Paste it here (without 'Bearer ' prefix) \\n4. Click Authorize",
   },
   th: {
-    title: "🚀 BackEnd API",
+    title: "BackEnd API",
     description: `
 # ยินดีต้อนรับสู่เอกสาร API
 
 API นี้ให้บริการจัดการผู้ใช้และระบบยืนยันตัวตนอย่างครบครัน
 
-## 🔐 วิธีการยืนยันตัวตน
+## วิธีการยืนยันตัวตน
 
 ### ขั้นตอนที่ 1: สมัครสมาชิก (ถ้ายังไม่มีบัญชี)
 ใช้ \`POST /api/users\` เพื่อสร้างบัญชีใหม่:
@@ -154,31 +153,31 @@ API นี้ให้บริการจัดการผู้ใช้แ�
 
 ### ขั้นตอนที่ 3: ยืนยันสิทธิ์
 1. คัดลอก \`token\` จากผลลัพธ์การเข้าสู่ระบบ
-2. คลิกปุ่ม **🔓 Authorize** (มุมบนขวา)
+2. คลิกปุ่ม **Authorize** (มุมบนขวา)
 3. วาง token ของคุณ (ไม่ต้องใส่ "Bearer ")
 4. คลิก **Authorize**
 
-ตอนนี้คุณสามารถเข้าถึง endpoint ที่ต้องยืนยันตัวตนได้แล้ว! 🎉
+ตอนนี้คุณสามารถเข้าถึง endpoint ที่ต้องยืนยันตัวตนได้แล้ว!
 
-## 📚 อ้างอิงด่วน
+## อ้างอิงด่วน
 | การกระทำ | Endpoint | ต้องยืนยันตัวตน |
 |--------|----------|-----------------|
-| สมัครสมาชิก | \`POST /api/users\` | ❌ ไม่ต้อง |
-| เข้าสู่ระบบ | \`POST /login\` | ❌ ไม่ต้อง |
-| ออกจากระบบ | \`POST /logout\` | ✅ ต้อง |
-| ดูผู้ใช้ทั้งหมด | \`GET /api/users\` | ✅ ต้อง |
-| ดูผู้ใช้ตาม ID | \`GET /api/users/:id\` | ✅ ต้อง |
-| แก้ไขผู้ใช้ | \`PUT /api/users/:id\` | ✅ ต้อง |
-| ลบผู้ใช้ | \`DELETE /api/users/:id\` | ✅ ต้อง |
+| สมัครสมาชิก | \`POST /api/users\` | ไม่ต้อง |
+| เข้าสู่ระบบ | \`POST /login\` | ไม่ต้อง |
+| ออกจากระบบ | \`POST /logout\` | ต้อง |
+| ดูผู้ใช้ทั้งหมด | \`GET /api/users\` | ต้อง |
+| ดูผู้ใช้ตาม ID | \`GET /api/users/:id\` | ต้อง |
+| แก้ไขผู้ใช้ | \`PUT /api/users/:id\` | ต้อง |
+| ลบผู้ใช้ | \`DELETE /api/users/:id\` | ต้อง |
 
 ---
     `,
-    externalDocs: "📖 เรียนรู้เพิ่มเติมเกี่ยวกับ API นี้",
+    externalDocs: "เรียนรู้เพิ่มเติมเกี่ยวกับ API นี้",
     tags: {
-      health: "🏥 **ตรวจสอบสถานะ** — ตรวจสอบสถานะเซิร์ฟเวอร์และฐานข้อมูล",
-      auth: "🔐 **ยืนยันตัวตน** — เข้าสู่ระบบ, ออกจากระบบ และจัดการเซสชัน",
-      users: "👥 **จัดการผู้ใช้** — สร้าง อ่าน แก้ไข ลบ บัญชีผู้ใช้",
-      misc: "🔧 **อื่นๆ** — endpoint อื่นๆ",
+      health: "ตรวจสอบสถานะ — ตรวจสอบสถานะเซิร์ฟเวอร์และฐานข้อมูล",
+      auth: "ยืนยันตัวตน — เข้าสู่ระบบ, ออกจากระบบ และจัดการเซสชัน",
+      users: "จัดการผู้ใช้ — สร้าง อ่าน แก้ไข ลบ บัญชีผู้ใช้",
+      misc: "อื่นๆ — endpoint อื่นๆ",
     },
     endpoints: {
       root: {
@@ -190,31 +189,31 @@ API นี้ให้บริการจัดการผู้ใช้แ�
         desc: "คืนค่าเวลาปัจจุบันของเซิร์ฟเวอร์ฐานข้อมูลเพื่อยืนยันการเชื่อมต่อ",
       },
       getAllUsers: {
-        summary: "📋 ดูผู้ใช้ทั้งหมด",
-        desc: "ดึงรายชื่อผู้ใช้แบบแบ่งหน้า **🔒 ต้องยืนยันตัวตน** - คลิกปุ่ม Authorize ก่อน!",
+        summary: "ดูผู้ใช้ทั้งหมด",
+        desc: "ดึงรายชื่อผู้ใช้แบบแบ่งหน้า **ต้องยืนยันตัวตน** - คลิกปุ่ม Authorize ก่อน!",
       },
       getUserById: {
-        summary: "👤 ดูผู้ใช้ตาม ID",
-        desc: "ดึงข้อมูลผู้ใช้คนเดียวตาม ID **🔒 ต้องยืนยันตัวตน**",
+        summary: "ดูผู้ใช้ตาม ID",
+        desc: "ดึงข้อมูลผู้ใช้คนเดียวตาม ID **ต้องยืนยันตัวตน**",
       },
       createUser: {
-        summary: "📝 สมัครสมาชิกใหม่",
+        summary: "สมัครสมาชิกใหม่",
         desc: "สร้างบัญชีผู้ใช้ใหม่ **ไม่ต้องยืนยันตัวตน** - ใช้สร้างบัญชีแล้วเข้าสู่ระบบ!",
       },
       updateUser: {
-        summary: "✏️ แก้ไขผู้ใช้",
-        desc: "อัปเดตข้อมูลผู้ใช้ที่มีอยู่ **🔒 ต้องยืนยันตัวตน**",
+        summary: "แก้ไขผู้ใช้",
+        desc: "อัปเดตข้อมูลผู้ใช้ที่มีอยู่ **ต้องยืนยันตัวตน**",
       },
       deleteUser: {
-        summary: "🗑️ ลบผู้ใช้",
-        desc: "ลบผู้ใช้ตาม ID **🔒 ต้องยืนยันตัวตน**",
+        summary: "ลบผู้ใช้",
+        desc: "ลบผู้ใช้ตาม ID **ต้องยืนยันตัวตน**",
       },
       login: {
-        summary: "🔑 เข้าสู่ระบบ",
+        summary: "เข้าสู่ระบบ",
         desc: "ยืนยันตัวตนด้วย username และ password เพื่อรับ JWT token จากนั้นใช้ token ในปุ่ม Authorize เพื่อเข้าถึง endpoint ที่ต้องยืนยันตัวตน",
       },
       logout: {
-        summary: "🚪 ออกจากระบบ",
+        summary: "ออกจากระบบ",
         desc: "ยกเลิกเซสชันของผู้ใช้ปัจจุบัน **ต้องยืนยันตัวตน** - คุณต้องเข้าสู่ระบบก่อน",
       },
       cors: {
@@ -223,12 +222,12 @@ API นี้ให้บริการจัดการผู้ใช้แ�
       },
     },
     responses: {
-      success: "✅ สำเร็จ",
+      success: "สำเร็จ",
       unauthorized:
-        "🔒 ไม่ได้รับอนุญาต - กรุณาเข้าสู่ระบบและใช้ปุ่ม Authorize ก่อน",
-      notFound: "🔍 ไม่พบข้อมูล",
-      badRequest: "❌ คำขอไม่ถูกต้อง",
-      serverError: "❌ เซิร์ฟเวอร์ผิดพลาด",
+        "ไม่ได้รับอนุญาต - กรุณาเข้าสู่ระบบและใช้ปุ่ม Authorize ก่อน",
+      notFound: "ไม่พบข้อมูล",
+      badRequest: "คำขอไม่ถูกต้อง",
+      serverError: "เซิร์ฟเวอร์ผิดพลาด",
     },
     params: {
       limit: "จำนวนผู้ใช้ต่อหน้า (สูงสุด 100)",
@@ -244,7 +243,11 @@ API นี้ให้บริการจัดการผู้ใช้แ�
 };
 
 // Function to generate spec for a specific language
+/**
+ * @param {string} [lang]
+ */
 function generateSpec(lang = "en") {
+  // @ts-ignore
   const t = translations[lang] || translations.en;
   return {
     openapi: "3.0.0",
@@ -263,14 +266,12 @@ function generateSpec(lang = "en") {
       {
         url: "https://013-backend.vercel.app",
         description:
-          lang === "th" ? "🌐 เซิร์ฟเวอร์ Production" : "🌐 Production Server",
+          lang === "th" ? "เซิร์ฟเวอร์ Production" : "Production Server",
       },
       {
         url: "http://localhost:3000",
         description:
-          lang === "th"
-            ? "🖥️ เซิร์ฟเวอร์ Development"
-            : "🖥️ Development Server",
+          lang === "th" ? "เซิร์ฟเวอร์ Development" : "Development Server",
       },
     ],
     tags: [

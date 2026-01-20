@@ -14,12 +14,13 @@ if (!process.env.DB_HOST) {
 const POOL_SIZE = parseInt(process.env.DB_POOL_SIZE || "50", 10);
 const DB_NAME = process.env.DB_NAME || "db_shop";
 
+/** @type {import('mysql2/promise').Pool} */
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: DB_NAME,
-  port: process.env.DB_PORT ?? 3306,
+  port: parseInt(process.env.DB_PORT || "3306", 10),
   waitForConnections: true,
   connectionLimit: POOL_SIZE,
   queueLimit: 0,

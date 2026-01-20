@@ -68,13 +68,13 @@ const MAX_PAGE_SIZE = parseInt(process.env.MAX_PAGE_SIZE || "100", 10);
  */
 router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
-    const limitParam = Number.parseInt(req.query.limit ?? "", 10);
+    const limitParam = Number.parseInt(String(req.query.limit ?? ""), 10);
     const limit =
       Number.isNaN(limitParam) || limitParam <= 0
         ? null
         : Math.min(limitParam, MAX_PAGE_SIZE);
 
-    const pageParam = Number.parseInt(req.query.page ?? "", 10);
+    const pageParam = Number.parseInt(String(req.query.page ?? ""), 10);
     const page = Number.isNaN(pageParam) || pageParam <= 0 ? 1 : pageParam;
     const offset = limit !== null ? Math.max(0, (page - 1) * limit) : 0;
 
@@ -93,6 +93,7 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
         : null;
 
     const rows = await dataPromise;
+    /** @type {any} */
     const responseBody = {
       status: "ok",
       count: rows.length,
@@ -264,14 +265,18 @@ router.post("/", async (req, res) => {
       ],
     );
 
+    const insertId = /** @type {import('mysql2/promise').ResultSetHeader} */ (
+      result
+    ).insertId;
+
     res.status(201).json({
       status: "ok",
-      id: result.insertId,
+      id: insertId,
       firstname,
       fullname,
       lastname,
       username,
-      status,
+      userStatus: status,
     });
   } catch (err) {
     return sendDbError(res, err);
@@ -408,7 +413,10 @@ router.put("/:id", verifyToken, async (req, res) => {
       [...params, id],
     );
 
-    if (result.affectedRows === 0) {
+    if (
+      /** @type {import('mysql2/promise').ResultSetHeader} */ (result)
+        .affectedRows === 0
+    ) {
       return res
         .status(404)
         .json({ status: "not_found", message: "User not found" });
@@ -469,7 +477,10 @@ router.delete("/:id", verifyToken, async (req, res) => {
       id,
     ]);
 
-    if (result.affectedRows === 0) {
+    if (
+      /** @type {import('mysql2/promise').ResultSetHeader} */ (result)
+        .affectedRows === 0
+    ) {
       return res
         .status(404)
         .json({ status: "not_found", message: "User not found" });

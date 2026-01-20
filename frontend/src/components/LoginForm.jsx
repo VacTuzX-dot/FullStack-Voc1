@@ -100,7 +100,12 @@ export default function LoginForm() {
             },
           });
 
-          navigate("/admin/users");
+          // Redirect based on user role
+          if (data.status === "admin") {
+            navigate("/admin/users");
+          } else {
+            navigate("/");
+          }
         } else {
           Swal.fire({
             title: "เข้าสู่ระบบล้มเหลว",

@@ -9,14 +9,21 @@ import { db, POOL_SIZE, DB_NAME } from "./config/db.js";
 import { runQuery, sendDbError, requireFields } from "./utils/helpers.js";
 import usersRouter from "./routes/users.js";
 
-const SECRET_KEY = process.env.JWT_SECRET;
-const activeTokens =
-  globalThis.__activeTokens ?? (globalThis.__activeTokens = new Map());
+const SECRET_KEY = process.env.JWT_SECRET || "default_secret";
+const g = /** @type {any} */ (globalThis);
+const activeTokens = g.__activeTokens ?? (g.__activeTokens = new Map());
 
+/**
+ * @param {any} userId
+ * @param {string} token
+ */
 function setActiveToken(userId, token) {
   activeTokens.set(userId, token);
 }
 
+/**
+ * @param {any} userId
+ */
 function clearActiveToken(userId) {
   activeTokens.delete(userId);
 }
@@ -578,11 +585,18 @@ app.post("/login", async (req, res) => {
       [username],
     );
 
-    if (rows.length === 0) {
+    const users = /** @type {import('mysql2/promise').RowDataPacket[]} */ (
+      rows
+    );
+
+    if (users.length === 0) {
       return res.status(401).json({ error: "User not found" });
     }
 
-    const user = rows[0];
+    const user = users[0];
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -637,7 +651,7 @@ app.post("/login", async (req, res) => {
  *         description: Unauthorized
  */
 app.post("/logout", verifyToken, (req, res) => {
-  clearActiveToken(req.user.id);
+  clearActiveToken(/** @type {any} */ (req).user.id);
   res.json({ status: "ok", message: "Logged out" });
 });
 
@@ -668,18 +682,33 @@ app.get("/api/data", (req, res) => {
 // --------------------------------------------------
 // 3) GLOBAL FALLBACK ERROR HANDLER
 // --------------------------------------------------
-app.use((err, req, res, next) => {
-  console.error("[UNCAUGHT ERROR]", err);
-  res.status(500).json({
-    status: "error",
-    message: "Internal server error",
-  });
-});
+/**
+ * @param {any} err
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+app.use(
+  /**
+   * @param {any} err
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  (err, req, res, next) => {
+    console.error("[UNCAUGHT ERROR]", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  },
+);
 
 // --------------------------------------------------
 // 4) START SERVER & GRACEFUL SHUTDOWN
 // --------------------------------------------------
 const PORT = process.env.PORT || 3000;
+/** @type {import('http').Server} */
 let server;
 
 if (process.env.NODE_ENV !== "test") {
@@ -688,6 +717,9 @@ if (process.env.NODE_ENV !== "test") {
   });
 
   // Graceful shutdown handler
+  /**
+   * @param {string} signal
+   */
   const gracefulShutdown = async (signal) => {
     console.log(`\n🛑 ${signal} received. Shutting down gracefully...`);
 

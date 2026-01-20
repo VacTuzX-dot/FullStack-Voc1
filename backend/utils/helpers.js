@@ -3,6 +3,9 @@ import { db } from "../config/db.js";
 /**
  * Execute a SQL query with optional parameters
  * Uses db.query for simple queries, db.execute for prepared statements
+ * @param {string} sql
+ * @param {any[]} [params]
+ * @returns {Promise<any>}
  */
 export async function runQuery(sql, params = []) {
   if (params.length === 0) {
@@ -16,6 +19,9 @@ export async function runQuery(sql, params = []) {
 
 /**
  * Send a standardized database error response
+ * @param {any} res
+ * @param {any} err
+ * @param {number} [httpCode]
  */
 export function sendDbError(res, err, httpCode = 500) {
   console.error("[DB ERROR]", err);
@@ -29,6 +35,9 @@ export function sendDbError(res, err, httpCode = 500) {
 /**
  * Check if required fields are present in an object
  * Returns the first missing field name, or null if all present
+ * @param {Record<string, any>} obj
+ * @param {string[]} keys
+ * @returns {string|null}
  */
 export function requireFields(obj, keys) {
   for (const k of keys) {

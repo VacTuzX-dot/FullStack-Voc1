@@ -4,6 +4,7 @@ import { cardData } from "./Card.jsx";
 
 export default function Navbar({ pathname: initialPathname = "/" }) {
   const [tokenState, setToken] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,10 +18,38 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
 
   const isActive = (href) => normalizePath(currentPath) === normalizePath(href);
 
+  // Decode JWT to get user role
+  const decodeToken = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join(""),
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     setIsClient(true);
     const token = localStorage.getItem("token");
     setToken(token);
+
+    // Decode token to get user role
+    if (token) {
+      const decoded = decodeToken(token);
+      if (decoded && decoded.status) {
+        setUserRole(decoded.status);
+      }
+    }
 
     // Update path on mount and subsequent navigations
     const updatePath = () => setCurrentPath(window.location.pathname);
@@ -206,6 +235,11 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
 
         {/* Mobile Toggle */}
         <div className="d-lg-none d-flex align-items-center gap-2">
+          {tokenState && userRole === "admin" && (
+            <a href="/admin/users" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-speedometer2"></i>
+            </a>
+          )}
           {tokenState ? (
             <button
               onClick={handleSignOut}
@@ -270,7 +304,12 @@ export default function Navbar({ pathname: initialPathname = "/" }) {
           </ul>
 
           {/* Desktop Auth */}
-          <div className="d-none d-lg-flex ms-3">
+          <div className="d-none d-lg-flex ms-3 gap-2">
+            {tokenState && userRole === "admin" && (
+              <a href="/admin/users" className="btn btn-outline-primary btn-sm">
+                <i className="bi bi-speedometer2 me-1"></i>Admin Panel
+              </a>
+            )}
             {tokenState ? (
               <button
                 onClick={handleSignOut}
