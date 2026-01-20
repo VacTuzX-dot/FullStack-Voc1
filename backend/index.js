@@ -540,7 +540,7 @@ app.post("/api/auth/login", async (req, res) => {
 
   try {
     const [rows] = await db.execute(
-      "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ? LIMIT 1",
+      "SELECT id, fullname, lastname, password, status FROM tbl_users WHERE username = ? LIMIT 1",
       [username],
     );
 
@@ -556,7 +556,12 @@ app.post("/api/auth/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, fullname: user.fullname, lastname: user.lastname },
+      {
+        id: user.id,
+        fullname: user.fullname,
+        lastname: user.lastname,
+        status: user.status,
+      },
       SECRET_KEY,
       { expiresIn: "1h" },
     );
@@ -604,7 +609,7 @@ app.post("/api/auth/register", async (req, res) => {
     // Insert new user - map frontend firstname to DB fullname
     await db.execute(
       `INSERT INTO tbl_users (firstname, fullname, lastname, username, password, status) 
-       VALUES (?, ?, ?, ?, ?, 'active')`,
+       VALUES (?, ?, ?, ?, ?, 'user')`,
       ["", firstname, lastname, username, hashedPassword],
     );
 
@@ -665,7 +670,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const [rows] = await db.execute(
-      "SELECT id, fullname, lastname, password FROM tbl_users WHERE username = ? LIMIT 1",
+      "SELECT id, fullname, lastname, password, status FROM tbl_users WHERE username = ? LIMIT 1",
       [username],
     );
 
@@ -681,7 +686,12 @@ app.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, fullname: user.fullname, lastname: user.lastname },
+      {
+        id: user.id,
+        fullname: user.fullname,
+        lastname: user.lastname,
+        status: user.status,
+      },
       SECRET_KEY,
       { expiresIn: "1h" },
     );

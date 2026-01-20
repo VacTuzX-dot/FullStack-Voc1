@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import verifyToken from "../middleware/auth.js";
+import requireAdmin from "../middleware/requireAdmin.js";
 import { db } from "../config/db.js";
 import { runQuery, sendDbError, requireFields } from "../utils/helpers.js";
 
@@ -65,7 +66,7 @@ const MAX_PAGE_SIZE = parseInt(process.env.MAX_PAGE_SIZE || "100", 10);
  *       500:
  *         description: Database error
  */
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const limitParam = Number.parseInt(req.query.limit ?? "", 10);
     const limit =
@@ -154,7 +155,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 
     const rows = await runQuery(
       "SELECT id, firstname, fullname, lastname, username, address, sex, birthday, status, created_at, updated_at FROM tbl_users WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (rows.length === 0) {
@@ -226,7 +227,7 @@ router.post("/", async (req, res) => {
       address = null,
       sex = null,
       birthday = null,
-      status = "active",
+      status = "user",
     } = req.body;
 
     const missing = requireFields(req.body, [
@@ -260,7 +261,7 @@ router.post("/", async (req, res) => {
         sex,
         birthday,
         status,
-      ]
+      ],
     );
 
     res.status(201).json({
@@ -404,7 +405,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     const [result] = await db.execute(
       `UPDATE tbl_users SET ${fields.join(", ")} WHERE id = ?`,
-      [...params, id]
+      [...params, id],
     );
 
     if (result.affectedRows === 0) {

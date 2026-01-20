@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tbl_users (
     address TEXT COMMENT 'ที่อยู่',
     sex VARCHAR(10) COMMENT 'เพศ (ชาย/หญิง)',
     birthday DATE COMMENT 'วันเกิด',
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    status ENUM('user', 'admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_username (username),
