@@ -4,17 +4,17 @@
 // Production (Vercel)
 // export const API_BASE_URL = 'https://backend-nextjs-virid.vercel.app';
 
-// Self-hosted (Docker on local network)
-// export const API_BASE_URL = 'http://localhost:3102';
-// export const API_BASE_URL = 'http://192.168.0.234:3102';
+// Local Development
+// export const API_BASE_URL = "http://localhost:3000";
 
 // Production (Custom domain)
 export const API_BASE_URL = "https://013backend.meo.in.th";
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  login: `${API_BASE_URL}/api/auth/login`,
-  register: `${API_BASE_URL}/api/auth/register`,
+  login: `${API_BASE_URL}/login`,
+  logout: `${API_BASE_URL}/logout`,
+  register: `${API_BASE_URL}/api/users`,
   users: `${API_BASE_URL}/api/users`,
   userById: (id) => `${API_BASE_URL}/api/users/${id}`,
 };
