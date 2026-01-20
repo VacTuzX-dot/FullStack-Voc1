@@ -76,11 +76,8 @@ import Layout from '../../layouts/Layout.astro';
   import { navigate } from 'astro:transitions/client';
   import { API_ENDPOINTS } from '../../config/api.js';
   
-  // Check auth
-  const token = localStorage.getItem('token');
-  if (!token) {
-    navigate('/signin');
-  }
+  // Global token variable
+  let token = null;
   
   // Decode JWT token to check user status
   function decodeToken(token) {
@@ -96,18 +93,34 @@ import Layout from '../../layouts/Layout.astro';
     }
   }
   
-  // Check if user is admin
-  const userData = decodeToken(token);
-  if (!userData || userData.status !== 'admin') {
-    Swal.fire({
-      title: 'Access Denied',
-      text: 'You do not have permission to access this page. Admin access required.',
-      icon: 'error',
-      confirmButtonText: 'Go to Home'
-    }).then(() => {
-      navigate('/');
-    });
-  }
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check auth
+    token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin');
+      return;
+    }
+    
+    // Check if user is admin
+    const userData = decodeToken(token);
+    if (!userData || userData.status !== 'admin') {
+      Swal.fire({
+        title: 'Access Denied',
+        text: 'You do not have permission to access this page. Admin access required.',
+        icon: 'error',
+        confirmButtonText: 'Go to Home',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      }).then(() => {
+        navigate('/');
+      });
+      return; // Stop execution
+    }
+    
+    // If admin, load users
+    loadUsers();
+  });
   
   
   async function loadUsers() {
@@ -163,8 +176,6 @@ import Layout from '../../layouts/Layout.astro';
       errorState?.classList.remove('d-none');
     }
   }
-  
-  loadUsers();
   
   // Edit User function with modal
   (window as any).editUser = async (id: number) => {
