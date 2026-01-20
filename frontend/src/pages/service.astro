@@ -151,7 +151,12 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
   .service-page {
-    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    background: 
+      linear-gradient(180deg, rgba(10, 10, 10, 0.85) 0%, rgba(26, 26, 26, 0.9) 50%, rgba(10, 10, 10, 0.85) 100%),
+      url('/images/bg2.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     min-height: 100vh;
     color: white;
     position: relative;
