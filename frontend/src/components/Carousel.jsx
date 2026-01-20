@@ -211,25 +211,6 @@ export default function Carousel() {
         <span className="visually-hidden">Next</span>
       </button>
 
-      {/* Scroll Down Indicator */}
-      <div
-        onClick={scrollToContent}
-        style={{
-          position: "absolute",
-          bottom: "30px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          cursor: "pointer",
-          zIndex: 10,
-          animation: "bounce 2s infinite",
-        }}
-      >
-        <i
-          className="bi bi-chevron-double-down text-white"
-          style={{ fontSize: "2rem", opacity: 0.7 }}
-        ></i>
-      </div>
-
       <style>{`
         @keyframes bounce {
           0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }

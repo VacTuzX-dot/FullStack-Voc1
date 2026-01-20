@@ -20,24 +20,6 @@ const searchQuery = Astro.url.searchParams.get('search') || '';
       </p>
     </div>
     
-    <!-- Search Bar (Desktop/Mobile) -->
-    <div class="row justify-content-center mb-5">
-      <div class="col-md-8 col-lg-6">
-        <form id="searchForm" class="input-group shadow-sm">
-          <input 
-            type="search" 
-            id="searchInput"
-            class="form-control form-control-lg border-end-0" 
-            placeholder="ค้นหา IEM ที่คุณต้องการ..."
-            value={searchQuery}
-          />
-          <button type="submit" class="btn btn-primary btn-lg">
-            <i class="bi bi-search"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-    
     <!-- Products Section -->
     <section>
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -69,19 +51,6 @@ const searchQuery = Astro.url.searchParams.get('search') || '';
 
 <script>
   import { navigate } from 'astro:transitions/client';
-
-  const form = document.getElementById('searchForm');
-  const input = document.getElementById('searchInput');
-  
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const query = (input as HTMLInputElement)?.value.trim();
-    if (query) {
-      navigate(`/?search=${encodeURIComponent(query)}`);
-    } else {
-      navigate('/');
-    }
-  });
 
   // Auto-scroll to results when search is performed
   document.addEventListener('astro:page-load', () => {
