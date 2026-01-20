@@ -59,6 +59,10 @@
   box-sizing: border-box;
 }
 
+html {
+  background: #0a0a0a;
+}
+
 body {
   font-family:
     "Prompt",
@@ -70,11 +74,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: transparent;
-}
-
-main {
-  flex: 1;
+  background: #0a0a0a;
 }
 
 /* Card hover effect */
